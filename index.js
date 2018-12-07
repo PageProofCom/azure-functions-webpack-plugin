@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const find = require('find');
 const VirtualModuleWebpackPlugin = require('virtual-module-webpack-plugin');
@@ -8,6 +9,7 @@ const FUNCTION_JSON = 'function.json';
 class AzureFunctionsWebpackPlugin {
   apply(compiler) {
     const { options } = compiler;
+    const dev = options.mode === 'development';
     const root = path.resolve(compiler.context, options.entry);
     const mainFile = options.output.filename === '[name].js'
       ? 'main.js'
@@ -21,22 +23,44 @@ class AzureFunctionsWebpackPlugin {
         path: functionPath,
       };
     });
-    const copyPlugin = new CopyWebpackPlugin(functions.map((func) => {
-      return {
-        from: path.resolve(func.path, FUNCTION_JSON),
-        to: path.join(func.name, FUNCTION_JSON),
-        transform: (content) => {
-          const parsed = JSON.parse(content.toString());
-          Object.assign(parsed, {
-            _originalEntryPoint: false,
-            _originalScriptFile: 'index.js',
-            scriptFile: '../' + mainFile,
-            entryPoint: func.name,
-          });
-          return JSON.stringify(parsed, null, 2);
-        },
-      };
-    }));
+    const configs = [
+      [compiler.context, 'extensions.csproj'],
+      [compiler.context, 'host.json'],
+      [compiler.context, 'proxies.json'],
+      dev ? [compiler.context, 'local.settings.json'] : null,
+    ].filter((file) => {
+      try {
+        if (file) {
+          const [root, name] = file;
+          return fs.existsSync(path.resolve(root, name));
+        }
+      } catch (err) {}
+      return false;
+    });
+    const copyPlugin = new CopyWebpackPlugin([]
+      .concat(functions.map((func) => {
+        return {
+          from: path.resolve(func.path, FUNCTION_JSON),
+          to: path.join(func.name, FUNCTION_JSON),
+          transform: (content) => {
+            const parsed = JSON.parse(content.toString());
+            Object.assign(parsed, {
+              _originalEntryPoint: false,
+              _originalScriptFile: 'index.js',
+              scriptFile: '../' + mainFile,
+              entryPoint: func.name,
+            });
+            return JSON.stringify(parsed, null, dev ? 2 : 0);
+          },
+        };
+      }))
+      .concat(configs.map(([root, name]) => {
+        return {
+          from: path.resolve(root, name),
+          to: name,
+        };
+      }))
+    );
     copyPlugin.apply(compiler);
     const entryPlugin = new VirtualModuleWebpackPlugin({
       moduleName: path.join(options.entry, 'index.js'),
