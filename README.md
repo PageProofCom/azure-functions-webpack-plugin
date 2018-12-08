@@ -43,7 +43,7 @@ When you run webpack with the mode set to `development`, your `local.settings.js
 
 ## Examples
 
-You can take a look at the [`examples/`](./examples) folder for examples.
+You can take a look at the [`examples`](./examples) folder for examples.
 
 ## Special thanks
 
