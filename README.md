@@ -6,7 +6,7 @@ This plugin was inspired by [`funcpack`](https://github.com/Azure/azure-function
 
 ## Requirements
 
-This plugin requires a minimum of Node v6.4.0 and Webpack v4.0.0.
+This plugin requires a minimum of Node v6 and Webpack v4.
 
 ## Getting Started
 
