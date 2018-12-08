@@ -1,6 +1,6 @@
 {
   "name": "@pageproof/azure-functions-webpack-plugin",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A super simple webpack plugin for Azure Functions",
   "author": {
     "name": "Jacob Marshall",
