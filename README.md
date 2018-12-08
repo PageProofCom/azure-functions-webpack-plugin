@@ -37,6 +37,24 @@ The plugin will automatically copy across your function app's `host.json`, `prox
 
 When you run webpack with the mode set to `development`, your `local.settings.json` file will also be copied to the output directory.
 
+After you run webpack, the output directory will include your main bundle (containing all of your functions), all of your Azure Function App configuration files, and multiple directories containing your function definitions.
+
+```
+$ webpack --mode production
+
+Hash: 20d0a0214bb589326486
+Version: webpack 4.27.1
+Time: 119ms
+Built at: 12/08/2018 9:09:31 PM
+                   Asset       Size  Chunks             Chunk Names
+HelloWorld/function.json  285 bytes          [emitted]
+               host.json   23 bytes          [emitted]
+                 main.js   1.09 KiB       0  [emitted]  main
+Entrypoint main = main.js
+[0] ./src/index.js 294 bytes {0} [built]
+[1] ./src/HelloWorld/index.js 106 bytes {0} [built]
+```
+
 ## Known problems
 
 - Your functions are scanned when the plugin is initialized, so if you're running webpack in watch mode, you will need to remember to restart webpack every time you add a new function.
