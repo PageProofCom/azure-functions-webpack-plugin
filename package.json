@@ -7,6 +7,9 @@
     "email": "jacob@pageproof.com",
     "url": "https://pageproof.com"
   },
+  "files": [
+    "index.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/PageProofCom/azure-functions-webpack-plugin.git"
