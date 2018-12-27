@@ -10,6 +10,7 @@ class AzureFunctionsWebpackPlugin {
   apply(compiler) {
     const { options } = compiler;
     options.output.libraryTarget = 'commonjs';
+    options.target = 'node';
     const dev = options.mode === 'development';
     const root = path.resolve(compiler.context, options.entry);
     const mainFile = options.output.filename === '[name].js'
