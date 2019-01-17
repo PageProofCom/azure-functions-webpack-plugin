@@ -8,13 +8,16 @@
     "url": "https://pageproof.com"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "index.d.ts"
   ],
+  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/PageProofCom/azure-functions-webpack-plugin.git"
   },
   "dependencies": {
+    "@types/webpack": "^4.4.23",
     "copy-webpack-plugin": "^4.6.0",
     "find": "^0.2.9",
     "virtual-module-webpack-plugin": "^0.4.0"
