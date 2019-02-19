@@ -10,7 +10,6 @@ class AzureFunctionsWebpackPlugin {
   apply(compiler) {
     const { options } = compiler;
     options.output.libraryTarget = 'commonjs';
-    options.target = 'node';
     const dev = options.mode === 'development';
     const root = path.resolve(compiler.context, options.entry);
     const mainFile = options.output.filename === '[name].js'
@@ -64,13 +63,16 @@ class AzureFunctionsWebpackPlugin {
       }))
     );
     copyPlugin.apply(compiler);
+    const getRequirePath = (funcPath) => {
+      return './' + path.relative(root, funcPath).replace(/\\/g, '/'); // replace windows path delimiters with "/"
+    };
     const entryPlugin = new VirtualModuleWebpackPlugin({
       moduleName: path.join(options.entry, 'index.js'),
       contents: `
         module.exports = {
           ${functions.map((func) => (`
             ${JSON.stringify(func.name)}: (function () {
-              var f = require("${func.path}");
+              var f = require(${JSON.stringify(getRequirePath(func.path))});
               return f.default || f;
             })(),
           `)).join('\n')}
